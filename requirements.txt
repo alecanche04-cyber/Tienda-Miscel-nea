@@ -1,0 +1,17 @@
+# Framework web opcional (si quieres interfaz web)
+flask==3.0.3
+
+# ORM y manejo de base de datos
+sqlalchemy==2.0.25
+
+# Manejo de variables de entorno (configuración)
+python-dotenv==1.0.0
+
+# Exportar reportes a CSV/Excel
+pandas==2.2.2
+
+# Enviar correos/notificaciones
+requests==2.31.0
+
+# Librería para fechas más flexible
+python-dateutil==2.9.0
