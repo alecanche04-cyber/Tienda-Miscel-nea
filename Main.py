@@ -24,15 +24,30 @@ def main():
 
             
             nombre = input("Nombre del producto: ")
-            stock_minimo = int(input("Stock mínimo: "))
+            try:
+                stock_minimo = int(input("Stock mínimo: "))
+            except ValueError:
+                print("Stock mínimo inválido. Introduce un número entero.")
+                continue
             proveedor = input("Proveedor: ")
             Inventario.agregar_producto(nombre, stock_minimo, proveedor)
 
         elif opcion == "2":
             producto = input("Nombre del producto: ")
-            cantidad = int(input("Cantidad: "))
-            caducidad_str = input("Fecha de caducidad (YYYY-MM-DD): ")
-            caducidad = date.fromisoformat(caducidad_str)
+            try:
+                cantidad = int(input("Cantidad: "))
+            except ValueError:
+                print("Cantidad inválida. Introduce un número entero.")
+                continue
+            caducidad_str = input("Fecha de caducidad (YYYY-MM-DD) (ENTER si no aplica): ")
+            if caducidad_str.strip() == "":
+                caducidad = None
+            else:
+                try:
+                    caducidad = date.fromisoformat(caducidad_str)
+                except Exception:
+                    print("Formato de fecha inválido. Use YYYY-MM-DD o deje vacío.")
+                    continue
             Inventario.registrar_entrada(producto, cantidad, caducidad)
 
         elif opcion == "3":
@@ -42,15 +57,29 @@ def main():
 
         elif opcion == "4":
             producto = input("Nombre del producto: ")
-            Inventario.ver_stock(producto)
+            stock = Inventario.ver_stock(producto)
+            # ver_stock imprime por sí misma, pero devolvemos y mostramos el valor también
+            if stock is not None:
+                print(f"Stock de {producto}: {stock}")
 
         elif opcion == "5":
             bajos = Inventario.productos_bajo_stock()
-            print("Productos bajo stock:", bajos)
+            if not bajos:
+                print("No hay productos bajo stock.")
+            else:
+                print("Productos bajo stock:")
+                for b in bajos:
+                    print(f" - {b['producto']}: {b['stock']} (min {b['stock_minimo']})")
 
         elif opcion == "6":
             proximos = Inventario.productos_por_caducar()
-            print("Productos por caducar:", proximos)
+            if not proximos:
+                print("No hay lotes próximos a caducar.")
+            else:
+                print("Lotes por caducar:")
+                for lote in proximos:
+                    cad = lote.get("caducidad")
+                    print(f" - {lote['producto']} x{lote['cantidad']} caduca {cad}")
 
         elif opcion == "7":
             proveedor = input("Proveedor: ")

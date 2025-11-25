@@ -4,14 +4,22 @@ productos = {}
 lotes = [] 
 
 def agregar_producto(nombre, stock_minimo, proveedor):
-    productos[nombre] = {"stock_minimo": stock_minimo, "provevedor": proveedor}
+    productos[nombre] = {"stock_minimo": stock_minimo, "proveedor": proveedor}
     print(f"producto {nombre} registrado con stock minimo {stock_minimo} y proveedor {proveedor}")
 
 def registrar_entrada(producto, cantidad, caducidad):
     if producto not in productos:
         print(f"El producto {producto} no está registrado.")
         return
-    lotes.append({"producto": producto, "cantidad": cantidad, "caducidad": caducidad})
+    # normalizar caducidad: aceptar None, date u string 'YYYY-MM-DD'
+    cad = caducidad
+    if cad is not None and isinstance(cad, str):
+        try:
+            cad = date.fromisoformat(cad)
+        except Exception:
+            print("Formato de caducidad inválido. Use YYYY-MM-DD o pase una fecha.")
+            return
+    lotes.append({"producto": producto, "cantidad": cantidad, "caducidad": cad})
     print(f"Entrada registrada: {cantidad} unidades de {producto} con caducidad {caducidad}")
 
 
